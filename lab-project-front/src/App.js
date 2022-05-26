@@ -1,24 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <main>
+     <h1>Tops Ten '10' albums of all time</h1>
+     <section>
+       <form>
+        Image:<img src='<input type="text"/>'/><br/>
+        Name: <input type='text'/><br/>
+        Artist: <input type='text'/><br/>
+        Genre: <input type='text'/><br/>
+        year realeased: <input type='text'/><br/>
+        <input type = "submit" value="Creat Album"/><br/>
+       </form>
+      </section>
+   </main>
+
   );
 }
 
