@@ -10,6 +10,7 @@ const App = () => {
     const [newGenre, setNewGenre] = useState()
     const [newImage, setNewImage] = useState()
     const [newYear, setNewYear] = useState()
+    const [newShowEdit, setNewShowEdit] = useState(false)
     const [album, setAlbum] = useState([])
 
     const handleNewAlbumName = (event) => {
@@ -28,6 +29,7 @@ const App = () => {
         setNewYear(event.target.value)
     }
 
+
     const handleNewAlbum = (event) => {
       event.preventDefault()
       axios.post(
@@ -38,6 +40,7 @@ const App = () => {
           genre: newGenre,
           image: newImage,
           year: newYear,
+          show: newShowEdit,
         }
       ).then(() => {
           axios.get('http://localhost:3000/albums').then((response) => {
@@ -68,7 +71,30 @@ const App = () => {
           artist: newArtist,
           genre: newGenre,
           image: newImage,
-          year: newYear
+          year: newYear,
+          show: newShowEdit,
+        }
+    )
+    .then(() => {
+      axios
+        .get('http://localhost:3000/albums')
+        .then((response) => {
+            setAlbum(response.data)
+        })
+    })
+  }
+  const show = (event, albumData) => {
+  event.preventDefault()
+    axios
+      .put(
+        `http://localhost:3000/albums/${albumData._id}`,
+        {
+          name: albumData.name,
+          artist: albumData.artist,
+          genre: albumData.genre,
+          image: albumData.image,
+          year: albumData.year,
+          show: !albumData.show,
         }
     )
     .then(() => {
@@ -89,9 +115,12 @@ const App = () => {
 
       }, [])
 
+
+
   return (
-   <main>
-     <h1>Best Albums of All Time</h1>
+   <main className="container">
+     <h2>Best Albums of All Time</h2>
+     <h4>Add an Album to the List</h4>
      <section>
        <form onSubmit={handleNewAlbum}>
          <input placeholder='Image Link' onChange={handleNewImage} type='text'/><br/>
@@ -102,20 +131,28 @@ const App = () => {
          <input type = "submit" value='Create Album'/><br/>
        </form>
       </section>
-      <section>
+      <section  className='container'>
         <h2>Album Catalog</h2>
+        <hr/>
         {album.map((albums) => {
-            return <>
+            return <div key={albums._id}>
+              <div className='card'>
+              <h4>{albums.artist}</h4>
+              <h5>{albums.name}</h5>
               <img src= {albums.image}/>
-              {albums.name}
-              {albums.artist}
-              {albums.genre}
-              {albums.year}
+              <h5>{albums.genre}</h5>
+              <h5>{albums.year}</h5>
+
               <button onClick={(event) => {
                 handleDelete(albums)
               }}>Delete Album</button>
-              
-              <form onSubmit={(event) => {
+
+              <button onClick={(event) => {
+                  show(event, albums)
+              } }>Edit Album</button>
+              <hr/>
+              </div>
+              {albums.show ? <form onSubmit={(event) => {
                   handleAlbumUpdate(event, albums)
               }}>
                 <input defaultValue={albums.name} onChange={handleNewAlbumName} type='text'></input>
@@ -124,8 +161,8 @@ const App = () => {
                 <input defaultValue={albums.image} onChange={handleNewImage} type='text'></input>
                 <input defaultValue={albums.year} onChange={handleNewYear} type='text'></input>
                 <input type='submit' value='Submit Changes'/>
-              </form>
-            </>
+              </form> : null }
+            </div>
 
         })}
       </section>
