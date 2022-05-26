@@ -5,7 +5,8 @@ const albumSchema = new mongoose.Schema({
 		artist: String,
    	genre: String,
    	image: String,
-   	year: Number
+   	year: Number,
+		show: Boolean
 })
 
 
